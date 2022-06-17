@@ -8,7 +8,7 @@ import './BootStrap/bootstrap.css'
 class App extends Component{
   // State should probably be the rhythms generated
   state={
-    characters:[
+    submissions:[
       
     ],
   }
@@ -18,22 +18,22 @@ class App extends Component{
   // Function to change the state to the array of rhythms we got
 
   // Render those rhythms (or pass them down to Table)
-  removeCharacter= (index)=> {
-    const {characters} = this.state
+  removeCharacter= (index: number)=> {
+    const {submissions} = this.state
 
-    this.setState({characters: characters.filter((character,i)=>{
+    this.setState({submissions: submissions.filter((character,i)=>{
       return i!=index
     } )})
   }
-  handleSubmit= (character)=>{
-    this.setState({characters:[...this.state.characters,character]})
+  handleSubmit= (submit: any)=>{
+    this.setState({submissions:[...this.state.submissions, submit]})
   }
   render() {
-    const {characters} = this.state
+    const {submissions} = this.state
     return (
       <div className="container">
-        <h1>React Tutorial</h1>
-        <Table characterData={characters} removeCharacter={this.removeCharacter} />
+        <h1>Rhythm Searcher</h1>
+        <Table submitData={submissions} removeCharacter={this.removeCharacter} />
         <Form handleSubmit={this.handleSubmit}/>
       </div>
     )

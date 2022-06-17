@@ -4,18 +4,25 @@ import './BootStrap/bootstrap.css'
 // Use this file to handle the structure of rhythm tables. 
 const TableHeader = () => {
     return(<thead> <tr>
-                <th>Name</th>
-                <th>Job</th>
+                <th>Min Group Size</th>
+                <th>Max Group Size</th>
+                <th>Number of Measures</th>
+                <th>Time Signature</th>
+                <th>Subdivision</th>
+                <th>Clear</th>
                 </tr>
     </thead>)
 }
-const TableBody = (props) => {
-    const rows = props.characterData.map((row, index) => {
+const TableBody = (props: { submitData: any[]; removeCharacter: (arg0: any) => void; }) => {
+    const rows = props.submitData.map((row, index) => {
       return (
         <tr key={index}>
-          <td>{row.name}</td>
-          <td>{row.job}</td>
-          <td><button onClick={()=> props.removeCharacter(index)}></button></td>
+          <td>{row.minGroup}</td>
+          <td>{row.maxGroup}</td>
+          <td>{row.numMeas}</td>
+          <td>{row.timeSig}</td>
+          <td>{row.subDiv}</td>
+          <td><button className='btn btn-primary'onClick={()=> props.removeCharacter(index)}>Delete</button></td>
         </tr>
       )
     })
@@ -35,13 +42,13 @@ const TableBody = (props) => {
     }
   }
   */
-const Table = (props) => {
-    const {characterData, removeCharacter} = props
+const Table = (props: { submitData: any; removeCharacter: any; }) => {
+    const {submitData, removeCharacter} = props
   
     return (
       <table className="table">
         <TableHeader />
-        <TableBody characterData={characterData} removeCharacter={removeCharacter} />
+        <TableBody submitData={submitData} removeCharacter={removeCharacter} />
       </table>
     )
   }
