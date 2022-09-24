@@ -25,6 +25,7 @@ const App=()=>{
   
   const [submissions,setSubmissions]=useState([])
   const [rhythmTable,setTable]=useState([])
+  
   const [beat,setBeat]=useState(0)
   const [tempo,setTempo]=useState(120)
   const [playing,setPlaying]=useState(false)
@@ -43,6 +44,7 @@ const App=()=>{
   const Kick=new Audio(kick);
   const sounds=new Array(Click,Snare,Kick);
 
+  // Getting the time interval for each beat
   const [timeInt,setTimeInt]=useState(60000/(tempo*SubdivtoNum.get(subDiv)))
   
   
@@ -63,12 +65,15 @@ const App=()=>{
   // Playing Toggle:
   const togglePlaying=()=>{
     setPlaying(!playing)
+    // Resetting all the playback counts
     if (playing==false){
       setBassCount(0);
       setBeat(0);
       setInd(0);
     }
   }
+
+  
 
   // Playback Functions
   const playNotes=()=>{
@@ -88,38 +93,40 @@ const App=()=>{
         
     }
     //Kick 
-    let played=false;
+    let changed=false;
     if (bassCount==rhythm[ind]-1){
+        changed=true;
         setBassCount(0);
         
     }
     else{
       if (bassCount==0){
         sounds[2].play();
-        played=true;
+        
       }
       setBassCount((bassCount)=>++bassCount)
     }
-    return played;
+    return changed;
     
 }
 useEffect(()=>{
     if (playing){
         const interval=setInterval(()=>{
-            const played=playNotes();
-            if (played){
-               
-                if (ind<rhythm.length){
-                  if(ind!=0){
-                    setInd((ind)=>++ind);
-                  }
+            const changed=playNotes();
+            if (changed){
+                console.log(ind)
+                if (ind<rhythm.length-1){
+                  
+                  setInd((ind)=>++ind);
+                  
                     
                 }
                 else{
                     setInd(0);
                 }
             }
-            if (beat<maxNotes){
+            
+            if (beat<maxNotes-1){
                 setBeat((beat)=>++beat);
             }
             else{
@@ -145,12 +152,9 @@ useEffect(()=>{
   */
 
   // Turn the rhythm string into an int array, then 
-  /*
-  ArrayRender=(fetched)=>{
-    for (array) in fetched:
-
-  }
-  */
+  
+  
+  
   const removeCharacter= (index: number)=> {
     const submits = submissions
 
@@ -161,17 +165,17 @@ useEffect(()=>{
 // Submission function: Fetch the first 50 rhythms of this 
   const handleSubmit= (submit: any)=>{
     let url="http://127.0.0.1:8000/rhythms";
-    let params={
-      "min_group":submit.minGroup,
-      "max_group":submit.maxGroup,
-      "num_meas":submit.numMeas,
-      
-    }
-    fetch(url,{body: JSON.stringify(submit)})
+    const sig=submit.timeSig[0]+"Y"+submit.timeSig[2]
+    const search=url+"/"+submit.minGroup+"/"+submit.maxGroup+"/"+submit.numMeas+"/"+sig+"/0/"+submit.subDiv+'/'
+    
+    fetch(search)
       .then((response)=> {
         return response.text();
       })
-      .then()
+      .then((text)=>{
+        console.log(text)
+        //renderRhythm(text)
+      })
       .catch(function(error){
           console.log(error);
       })
@@ -200,6 +204,6 @@ useEffect(()=>{
   
 }
 
-// <Playback rhythm={rhythm} tempo={120}/>
+
         
 export default App;

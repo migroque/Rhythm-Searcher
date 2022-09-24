@@ -29,19 +29,7 @@ const TableBody = (props: { submitData: any[]; removeCharacter: (arg0: any) => v
     return <tbody>{rows}</tbody>
   }
 
-  /*class Table extends Component {
-    render() {
-      const {characterData,removeCharacter} = this.props
   
-      return (
-        <table>
-          <TableHeader />
-          <TableBody characterData={characterData} removeCharacter={removeCharacter} />
-        </table>
-      )
-    }
-  }
-  */
 const Table = (props: { submitData: any; removeCharacter: any; }) => {
     const {submitData, removeCharacter} = props
   
