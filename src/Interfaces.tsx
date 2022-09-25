@@ -7,7 +7,7 @@ TimeSigtoNum.set("3/4",3);
 TimeSigtoNum.set("5/4",5);
 
 export const SubdivtoNum=new Map();
-SubdivtoNum.set("eighths",2);
+SubdivtoNum.set("Eighths",2);
 SubdivtoNum.set("16ths",4);
 SubdivtoNum.set("quint",5);
 SubdivtoNum.set("eighth trips",3);

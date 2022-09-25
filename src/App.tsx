@@ -1,7 +1,7 @@
 import React, {Component,useEffect,useState} from 'react';
 import Table from './Table'
 import Form from './Form'
-import Playback from './Playback';
+import Display from './Display'
 import {TimeSigtoNum,SubdivtoNum} from "./Interfaces";
 import './App.css';
 import snare from "./samples/snare.wav"
@@ -18,25 +18,25 @@ const rhythm={
   subdiv: "eighths",
   arr: [3,3,3,3,3,3,3,3,3,3,2]
 }
-
+//[3,3,3,3,3,1],[5,5,5,1]
 
 const App=()=>{
   // Setting states for submissions and playback variables
   
   const [submissions,setSubmissions]=useState([])
   const [rhythmTable,setTable]=useState([])
-  
   const [beat,setBeat]=useState(0)
   const [tempo,setTempo]=useState(120)
   const [playing,setPlaying]=useState(false)
   const [ind,setInd]=useState(0)
-  const [rhythm,setRhythm]=useState([3,3,3,3,3,3,3,3,3,3,2])
+  const [rhythm,setRhythm]=useState([3,3,3,3,1,3])
   const [timeSig,setTimeSig]=useState("4/4")
-  const [subDiv,setSubDiv]=useState("16ths")
+  const [subDiv,setSubDiv]=useState("Eighths")
   const [numMeas,setNumMeas]=useState(2)
-  const [numBeats,setNumBeats]=useState((TimeSigtoNum.get(timeSig)*SubdivtoNum.get(subDiv)))
+  const [numBeats,setNumBeats]=useState(TimeSigtoNum.get(timeSig)*SubdivtoNum.get(subDiv))
   const [maxNotes,setMaxNotes]=useState(numBeats*numMeas)
   const [bassCount,setBassCount]=useState(0);
+  console.log(SubdivtoNum.get(subDiv))
 
   // Setting the sound array
   const Click=new Audio(click);
@@ -51,15 +51,16 @@ const App=()=>{
   //Functions to set different state variables
 
   // Set tempo/time interval
+  /*
   const handleTempo=(event)=>{
-    const eventVal=parseInt(event.target.value)
-    setTempo(eventVal)
+    const eventVal=event.target.value
+    setTempo(parseInt(eventVal))
     setTimeInt(60000/(tempo*SubdivtoNum.get(subDiv)))
   }
-
+*/
   // Set rhythm/prefixSum
-  const handleRhythm=(event)=>{
-    setRhythm(event.arr)
+  const handleRhythm=(rhythm)=>{
+    setRhythm(rhythm)
   }
 
   // Playing Toggle:
@@ -95,6 +96,10 @@ const App=()=>{
     //Kick 
     let changed=false;
     if (bassCount==rhythm[ind]-1){
+      if (bassCount==0){
+        sounds[2].play();
+        
+      }
         changed=true;
         setBassCount(0);
         
@@ -114,7 +119,7 @@ useEffect(()=>{
         const interval=setInterval(()=>{
             const changed=playNotes();
             if (changed){
-                console.log(ind)
+                
                 if (ind<rhythm.length-1){
                   
                   setInd((ind)=>++ind);
@@ -189,21 +194,22 @@ useEffect(()=>{
     setSubmissions((submissions)=>[...submissions,submit])
     
   }
-  // <Playback {tempo=tempo}/>, this.setState({tempo=newTempo}) to set the tempo of playback as well as the new tempo
   
+  
+
   return (
     <div className="container">
         <h1>Rhythm Searcher</h1>
         <Table submitData={submissions} removeCharacter={removeCharacter} />
         <Form handleSubmit={handleSubmit}/>
         <button onClick={togglePlaying} className='btn btn-primary'>Play</button>
-        <Tempo value={tempo} onChange={(event)=>handleTempo(event)}/>
-        
       </div>
     )
   
 }
 
 
+//<Tempo defaultValue={tempo} onChange={(event)=>handleTempo(event)}/>
+//<Display handleRhythm={handleRhythm} rhythms={rhythmTable}/>
         
 export default App;
