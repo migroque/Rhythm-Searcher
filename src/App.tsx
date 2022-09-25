@@ -24,19 +24,19 @@ const App=()=>{
   // Setting states for submissions and playback variables
   
   const [submissions,setSubmissions]=useState([])
-  const [rhythmTable,setTable]=useState([])
+  const [rhythmTable,setTable]=useState([[3,3,3,3,3,1],[5,5,5,1]])
   const [beat,setBeat]=useState(0)
   const [tempo,setTempo]=useState(120)
   const [playing,setPlaying]=useState(false)
   const [ind,setInd]=useState(0)
-  const [rhythm,setRhythm]=useState([3,3,3,3,1,3])
+  const [rhythm,setRhythm]=useState([3,3,3,3,3,1])
   const [timeSig,setTimeSig]=useState("4/4")
   const [subDiv,setSubDiv]=useState("Eighths")
   const [numMeas,setNumMeas]=useState(2)
   const [numBeats,setNumBeats]=useState(TimeSigtoNum.get(timeSig)*SubdivtoNum.get(subDiv))
   const [maxNotes,setMaxNotes]=useState(numBeats*numMeas)
   const [bassCount,setBassCount]=useState(0);
-  console.log(SubdivtoNum.get(subDiv))
+  
 
   // Setting the sound array
   const Click=new Audio(click);
@@ -60,6 +60,8 @@ const App=()=>{
 */
   // Set rhythm/prefixSum
   const handleRhythm=(rhythm)=>{
+    console.log("Done!")
+    console.log(rhythm)
     setRhythm(rhythm)
   }
 
@@ -94,21 +96,19 @@ const App=()=>{
         
     }
     //Kick 
+    if (bassCount==0){
+      sounds[2].play();
+      
+    }
     let changed=false;
     if (bassCount==rhythm[ind]-1){
-      if (bassCount==0){
-        sounds[2].play();
-        
-      }
+      
         changed=true;
         setBassCount(0);
         
     }
     else{
-      if (bassCount==0){
-        sounds[2].play();
-        
-      }
+      
       setBassCount((bassCount)=>++bassCount)
     }
     return changed;
@@ -151,8 +151,9 @@ useEffect(()=>{
 
   // Function to change the state to the array of rhythms we got
   /*
-  fetch=()=>{
-    fetch(url,{timeSig,subdiv,numMeas,})
+  fetch=(rhythms)=>{
+    setTable(rhythms)
+    setRhythm(rhythmTable[0])
   }
   */
 
@@ -203,6 +204,7 @@ useEffect(()=>{
         <Table submitData={submissions} removeCharacter={removeCharacter} />
         <Form handleSubmit={handleSubmit}/>
         <button onClick={togglePlaying} className='btn btn-primary'>Play</button>
+        <Display handleRhythm={handleRhythm} rhythms={rhythmTable} rhythm={rhythm} isPlaying={playing}/>
       </div>
     )
   
@@ -210,6 +212,6 @@ useEffect(()=>{
 
 
 //<Tempo defaultValue={tempo} onChange={(event)=>handleTempo(event)}/>
-//<Display handleRhythm={handleRhythm} rhythms={rhythmTable}/>
+
         
 export default App;
