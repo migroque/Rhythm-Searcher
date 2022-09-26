@@ -32,7 +32,6 @@ const DisplayHeader=()=>{
 const DisplayBody=(props)=>{
     const rows=props.rhythms.map((rhythm,index)=>{
         let str="["
-        console.log(rhythm)
         for(let i=0;i<rhythm.length;i++){
             str+=rhythm[i];
             if (i!=rhythm.length-1){
@@ -41,7 +40,6 @@ const DisplayBody=(props)=>{
         }
         str+="]"
         let selected="Select"
-        console.log((props.rhythmActive==rhythm))
         if (arraysEqual(rhythm,props.rhythmActive)){
             selected="Selected"
         }

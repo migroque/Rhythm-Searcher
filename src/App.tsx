@@ -60,8 +60,6 @@ const App=()=>{
 */
   // Set rhythm/prefixSum
   const handleRhythm=(rhythm)=>{
-    console.log("Done!")
-    console.log(rhythm)
     setRhythm(rhythm)
   }
 
@@ -144,23 +142,29 @@ useEffect(()=>{
 )
 
   // Function to get form submission and make an Fetch Request for 1) First 50 rhythms in the server and 2) the number of rhythms
-  /*
-
-  */
 
 
-  // Function to change the state to the array of rhythms we got
-  /*
-  fetch=(rhythms)=>{
-    setTable(rhythms)
+  // Function to change the state to the array of rhythms we got, which then displays them below our search form.
+  
+  const draw=(rhythms)=>{
+    let newTable=[]
+    let numArr=[]
+    let arr=rhythms.split("\n")
+   
+    for (let i=0;i<arr.length;i++){
+      for (let j=0;j<arr[i].length;j++){
+        numArr=[...numArr,parseInt(arr[i][j])]
+      }
+      newTable=[...newTable,numArr]
+      numArr=[]
+    }
+    setTable(newTable)
+    
     setRhythm(rhythmTable[0])
   }
-  */
+  
 
   // Turn the rhythm string into an int array, then 
-  
-  
-  
   const removeCharacter= (index: number)=> {
     const submits = submissions
 
@@ -168,22 +172,34 @@ useEffect(()=>{
       return i!==index
     } ))
   }
-// Submission function: Fetch the first 50 rhythms of this 
+
+// Submission function: Fetch the first 50 rhythms with these parameters from the server.
   const handleSubmit= (submit: any)=>{
     let url="http://127.0.0.1:8000/rhythms";
+    
     const sig=submit.timeSig[0]+"Y"+submit.timeSig[2]
     const search=url+"/"+submit.minGroup+"/"+submit.maxGroup+"/"+submit.numMeas+"/"+sig+"/0/"+submit.subDiv+'/'
     
+   
     fetch(search)
-      .then((response)=> {
-        return response.text();
+      .then(
+        (response)=> {
+          if (!response.ok){
+            throw new Error("404 Error. Search Failed")
+          }
+          else{
+            return response.text();
+          }
+        
       })
       .then((text)=>{
-        console.log(text)
+        
+        draw(text)
         //renderRhythm(text)
       })
       .catch(function(error){
-          console.log(error);
+          alert(error)
+          
       })
     setTimeSig(submit.timeSig)
     setSubDiv(submit.subDiv)
