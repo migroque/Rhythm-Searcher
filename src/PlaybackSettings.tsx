@@ -4,7 +4,7 @@ const Tempo=(props)=>{
     return(
     <div>
         <label>Tempo</label>
-        <input type="number" min="30" max="240" defaultValue={props.value} onChange={props.handleTempo}/>
+        <input type="number" min="30" max="240" defaultValue={props.value} onChange={(value)=>props.handleTempo(value)}/>
     </div>
     )
 }

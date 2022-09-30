@@ -93,7 +93,7 @@ class Form extends Component<{},myState>{
                 <option value="5ths">4th Note Quintuplets</option>
             </select>
                 
-                <input className='btn btn-primary'type="submit" value="Submit" onClick={this.submitForm} />
+                <input className='btn btn-primary'type="submit" value="Submit" onClick={this.submitForm} disabled={this.props.playing}/>
             </div>
                 
             </form>

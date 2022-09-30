@@ -51,13 +51,23 @@ const App=()=>{
   //Functions to set different state variables
 
   // Set tempo/time interval
-  /*
+  
   const handleTempo=(event)=>{
     const eventVal=event.target.value
     setTempo(parseInt(eventVal))
     setTimeInt(60000/(tempo*SubdivtoNum.get(subDiv)))
   }
-*/
+  const incTempUp=()=>{
+    setTempo((tempo)=>++tempo)
+    console.log(tempo)
+    setTimeInt(60000/((tempo+1)*SubdivtoNum.get(subDiv)))
+    console.log(timeInt)
+  }
+  const incTempDown=()=>{
+    setTempo((tempo)=>--tempo)
+    setTimeInt(60000/((tempo-1)*SubdivtoNum.get(subDiv)))
+  }
+
   // Set rhythm/prefixSum
   const handleRhythm=(rhythm)=>{
     setRhythm(rhythm)
@@ -217,17 +227,23 @@ useEffect(()=>{
   return (
     <div className="container">
         <h1>Rhythm Searcher</h1>
-        <Table submitData={submissions} removeCharacter={removeCharacter} />
-        <Form handleSubmit={handleSubmit}/>
+        <Form handleSubmit={handleSubmit} playing={playing}/>
         <button onClick={togglePlaying} className='btn btn-primary'>Play</button>
+        <div className='justify-content-center'>
+        <label>Tempo</label>
+        <button disabled={playing} onClick={incTempDown}>-</button>
+        <input disabled={playing} type="number" min="30" max="240" value={tempo} onChange={(event)=>handleTempo(event)}/>
+        <button disabled={playing} onClick={incTempUp}>+</button>
+        </div>
+        
         <Display handleRhythm={handleRhythm} rhythms={rhythmTable} rhythm={rhythm} isPlaying={playing}/>
       </div>
-    )
-  
+    ) 
 }
 
 
-//<Tempo defaultValue={tempo} onChange={(event)=>handleTempo(event)}/>
+//<Table submitData={submissions} removeCharacter={removeCharacter} />
+//<Tempo value={tempo} onChange={(event)=>handleTempo(event)}/>
 
         
 export default App;
