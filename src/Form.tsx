@@ -88,7 +88,7 @@ class Form extends Component<{},myState>{
             <select className='form-control' name="subDiv" id="sbd" value={this.state.subDiv} onChange={this.handleSelChange}>
                 <option value="Eigths">8ths</option>
                 <option value="Quarters">Quarters</option>
-                <option value="ETrips">8th Note Triplets</option>
+                <option value="8th Note Triplets">8th Note Triplets</option>
                 <option value="16ths">16ths</option>
                 <option value="5ths">4th Note Quintuplets</option>
             </select>

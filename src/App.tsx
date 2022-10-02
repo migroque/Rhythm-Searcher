@@ -23,19 +23,25 @@ const rhythm={
 const App=()=>{
   // Setting states for submissions and playback variables
   
-  const [submissions,setSubmissions]=useState([])
-  const [rhythmTable,setTable]=useState([[3,3,3,3,3,1],[5,5,5,1]])
+  
+  const [rhythmTable,setTable]=useState([[3,3,4,3,3,3,3,2],[3,3,4,3,4,5,2]])
   const [beat,setBeat]=useState(0)
   const [tempo,setTempo]=useState(120)
   const [playing,setPlaying]=useState(false)
   const [ind,setInd]=useState(0)
-  const [rhythm,setRhythm]=useState([3,3,3,3,3,1])
+  const [rhythm,setRhythm]=useState([3,3,4,3,3,3,3,2])
+
+  // State Variables that are used for searching and modified by the form
   const [timeSig,setTimeSig]=useState("4/4")
-  const [subDiv,setSubDiv]=useState("Eighths")
+  const [subDiv,setSubDiv]=useState("8th Note Triplets")
   const [numMeas,setNumMeas]=useState(2)
+  const [minGroup,setMinGroup]=useState(3)
+  const [maxGroup,setMaxGroup]=useState(5)
+
   const [numBeats,setNumBeats]=useState(TimeSigtoNum.get(timeSig)*SubdivtoNum.get(subDiv))
   const [maxNotes,setMaxNotes]=useState(numBeats*numMeas)
   const [bassCount,setBassCount]=useState(0);
+  const [pages,setPages]=useState(1)
   
 
   // Setting the sound array
@@ -46,6 +52,7 @@ const App=()=>{
 
   // Getting the time interval for each beat
   const [timeInt,setTimeInt]=useState(60000/(tempo*SubdivtoNum.get(subDiv)))
+  
   
   
   //Functions to set different state variables
@@ -157,10 +164,14 @@ useEffect(()=>{
   // Function to change the state to the array of rhythms we got, which then displays them below our search form.
   
   const draw=(rhythms)=>{
+    console.log(rhythms)
     let newTable=[]
     let numArr=[]
     let arr=rhythms.split("\n")
-   
+    
+    let length=arr.pop()
+    
+    
     for (let i=0;i<arr.length;i++){
       for (let j=0;j<arr[i].length;j++){
         numArr=[...numArr,parseInt(arr[i][j])]
@@ -169,19 +180,42 @@ useEffect(()=>{
       numArr=[]
     }
     setTable(newTable)
+    setPages(parseInt(length))
     
-    setRhythm(rhythmTable[0])
+    setRhythm(newTable[0])
   }
   
 
   // Turn the rhythm string into an int array, then 
-  const removeCharacter= (index: number)=> {
-    const submits = submissions
-
-    setSubmissions(submits.filter((character,i)=>{
-      return i!==index
-    } ))
-  }
+  
+// Function to get different index of rhythms
+const handleChange=(event)=>{
+  console.log(event.target.value)
+  let url="http://127.0.0.1:8000/rhythms";
+  const sig=timeSig[0]+"Y"+timeSig[2]
+  const search=url+"/"+minGroup+"/"+maxGroup+"/"+numMeas+"/"+sig+"/"+(event.target.value-1)+"/"+subDiv+'/'
+  setInd(event.value)
+  fetch(search)
+      .then(
+        (response)=> {
+          if (!response.ok){
+            throw new Error("404 Error. Search Failed")
+          }
+          else{
+            return response.text();
+          }
+        
+      })
+      .then((text)=>{
+        
+        draw(text)
+        //renderRhythm(text)
+      })
+      .catch(function(error){
+          alert(error)
+          
+      })
+}
 
 // Submission function: Fetch the first 50 rhythms with these parameters from the server.
   const handleSubmit= (submit: any)=>{
@@ -189,6 +223,7 @@ useEffect(()=>{
     
     const sig=submit.timeSig[0]+"Y"+submit.timeSig[2]
     const search=url+"/"+submit.minGroup+"/"+submit.maxGroup+"/"+submit.numMeas+"/"+sig+"/0/"+submit.subDiv+'/'
+    
     
    
     fetch(search)
@@ -214,11 +249,15 @@ useEffect(()=>{
     setTimeSig(submit.timeSig)
     setSubDiv(submit.subDiv)
     setNumMeas(submit.numMeas)
+    setMinGroup(parseInt(submit.minGroup))
+    setMaxGroup(parseInt(submit.maxGroup))
+    console.log(subDiv)
 
-    setNumBeats((TimeSigtoNum.get(timeSig)*SubdivtoNum.get(subDiv)))
-    setMaxNotes(numBeats*numMeas)
+    setNumBeats((TimeSigtoNum.get(submit.timeSig)*SubdivtoNum.get(submit.subDiv)))
+    setMaxNotes(TimeSigtoNum.get(submit.timeSig)*SubdivtoNum.get(submit.subDiv))
+    setTimeInt(60000/(tempo*SubdivtoNum.get(submit.subDiv)))
+    console.log(numBeats)
 
-    setSubmissions((submissions)=>[...submissions,submit])
     
   }
   
@@ -229,21 +268,29 @@ useEffect(()=>{
         <h1>Rhythm Searcher</h1>
         <Form handleSubmit={handleSubmit} playing={playing}/>
         <button onClick={togglePlaying} className='btn btn-primary'>Play</button>
-        <div className='justify-content-center'>
+        <div className='col-lg-6 mx-auto'>
         <label>Tempo</label>
         <button disabled={playing} onClick={incTempDown}>-</button>
         <input disabled={playing} type="number" min="30" max="240" value={tempo} onChange={(event)=>handleTempo(event)}/>
         <button disabled={playing} onClick={incTempUp}>+</button>
         </div>
-        
-        <Display handleRhythm={handleRhythm} rhythms={rhythmTable} rhythm={rhythm} isPlaying={playing}/>
+        <Display handleRhythm={handleRhythm} rhythms={rhythmTable} rhythm={rhythm} isPlaying={playing} pages={pages} handleChange={handleChange}/>
       </div>
     ) 
 }
 
-
+//Graveyard
 //<Table submitData={submissions} removeCharacter={removeCharacter} />
 //<Tempo value={tempo} onChange={(event)=>handleTempo(event)}/>
+/*
+  const removeCharacter= (index: number)=> {
+    const submits = submissions
+
+    setSubmissions(submits.filter((character,i)=>{
+      return i!==index
+    } ))
+  }
+*/
 
         
 export default App;

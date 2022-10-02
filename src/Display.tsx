@@ -30,6 +30,7 @@ const DisplayHeader=()=>{
 }
 // Want to pass handlerhythm, the rhythm table, the active rhythm, and whether or not we're playing rn.
 const DisplayBody=(props)=>{
+
     const rows=props.rhythms.map((rhythm,index)=>{
         let str="["
         for(let i=0;i<rhythm.length;i++){
@@ -54,12 +55,21 @@ const DisplayBody=(props)=>{
     return <tbody>{rows}</tbody> 
 }
 
+const DisplayPages=(props)=>{
+    let options=[];
+    for (let i=1;i<=props.pages;i++){
+        options.push(<option value={i}>{i}</option>)
+    }
+    return <select onChange={props.handleChange} disabled={props.isPlaying}>{options}</select>
+}
+
 const Display=(props)=>{
-    const {rhythms,rhythm,handleRhythm,isPlaying}=props
+    const {rhythms,rhythm,handleRhythm,isPlaying,pages,handleChange}=props
     return(
         <table className='table'>
         <DisplayHeader/>
         <DisplayBody rhythms={rhythms} handleRhythm={handleRhythm} rhythmActive={rhythm} isPlaying={isPlaying}/>
+        <DisplayPages pages={pages} handleChange={handleChange} isPlaying={isPlaying}/>
         </table>
     )
 }

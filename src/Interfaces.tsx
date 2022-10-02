@@ -10,7 +10,7 @@ export const SubdivtoNum=new Map();
 SubdivtoNum.set("Eighths",2);
 SubdivtoNum.set("16ths",4);
 SubdivtoNum.set("quint",5);
-SubdivtoNum.set("eighth trips",3);
+SubdivtoNum.set("8th Note Triplets",3);
 SubdivtoNum.set("16th trips",6);
 
 
