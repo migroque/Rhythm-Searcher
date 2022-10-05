@@ -38,9 +38,12 @@ const App=()=>{
   const [minGroup,setMinGroup]=useState(3)
   const [maxGroup,setMaxGroup]=useState(5)
 
+  // Playback Settings
   const [numBeats,setNumBeats]=useState(TimeSigtoNum.get(timeSig)*SubdivtoNum.get(subDiv))
   const [maxNotes,setMaxNotes]=useState(numBeats*numMeas)
   const [bassCount,setBassCount]=useState(0);
+  const [halfTime,setHalfTime]=useState(false)
+
   const [pages,setPages]=useState(1)
   
 
@@ -91,28 +94,44 @@ const App=()=>{
     }
   }
 
+  const toggleHalfTime=()=>{
+    setHalfTime(!halfTime)
+    // Resetting all the playback counts
+    if (playing==false){
+      setBassCount(0);
+      setBeat(0);
+      setInd(0);
+    }
+  }
   
 
   // Playback Functions
   const playNotes=()=>{
-    
+    let playing=[]
     // Click condition
     if (beat%(SubdivtoNum.get(subDiv))==0){
-        sounds[0].play();
+        
+        playing.push(sounds[0])
     }
     
     //Snare condition (only quarter notes)
     if (timeSig[2]=='4'){
         if (timeSig[0]=='4'||timeSig[0]=='5'){
-            if (((beat-SubdivtoNum.get(subDiv))%numBeats==0)||((beat-3*SubdivtoNum.get(subDiv))%numBeats==0)){
-                sounds[1].play();
+            if ((!halfTime)&&(((beat-SubdivtoNum.get(subDiv))%numBeats==0)||((beat-3*SubdivtoNum.get(subDiv))%numBeats==0))){
+                
+                playing.push(sounds[1])
+            }
+            else if (halfTime&&((beat-2*SubdivtoNum.get(subDiv))%numBeats==0)){
+              
+              playing.push(sounds[1])
             }
         }
         
     }
     //Kick 
     if (bassCount==0){
-      sounds[2].play();
+      
+      playing.push(sounds[2])
       
     }
     let changed=false;
@@ -125,6 +144,9 @@ const App=()=>{
     else{
       
       setBassCount((bassCount)=>++bassCount)
+    }
+    for (let i=0;i<playing.length;i++){
+      playing[i].play()
     }
     return changed;
     
@@ -260,19 +282,27 @@ const handleChange=(event)=>{
 
     
   }
-  
+  let playtext="Play";
+  if (playing){
+    playtext="Pause"
+  }
+  let halftext="Halftime?"
+  if (halfTime){
+    halftext="Halftime"
+  }
   
 
   return (
     <div className="container">
         <h1>Rhythm Searcher</h1>
         <Form handleSubmit={handleSubmit} playing={playing}/>
-        <button onClick={togglePlaying} className='btn btn-primary'>Play</button>
+        <button onClick={togglePlaying} className='btn btn-primary'>{playtext}</button>
         <div className='col-lg-6 mx-auto'>
         <label>Tempo</label>
         <button disabled={playing} onClick={incTempDown}>-</button>
         <input disabled={playing} type="number" min="30" max="240" value={tempo} onChange={(event)=>handleTempo(event)}/>
         <button disabled={playing} onClick={incTempUp}>+</button>
+        <button disabled={playing} onClick={toggleHalfTime}>{halftext}</button>
         </div>
         <Display handleRhythm={handleRhythm} rhythms={rhythmTable} rhythm={rhythm} isPlaying={playing} pages={pages} handleChange={handleChange}/>
       </div>
