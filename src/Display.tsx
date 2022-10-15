@@ -41,13 +41,16 @@ const DisplayBody=(props)=>{
         }
         str+="]"
         let selected="Select"
+        let className='btn btn-outline-primary'
         if (arraysEqual(rhythm,props.rhythmActive)){
             selected="Selected"
+            className='btn btn-primary'
         }
+        
         
         return(
             <tr key={index}>
-                <td><button disabled={props.isPlaying} onClick={()=>props.handleRhythm(rhythm)}>{selected}</button></td>
+                <td><button disabled={props.isPlaying} className={className} onClick={()=>props.handleRhythm(rhythm)}>{selected}</button></td>
                 <td>{str}</td>
             </tr>
         )
@@ -60,17 +63,29 @@ const DisplayPages=(props)=>{
     for (let i=1;i<=props.pages;i++){
         options.push(<option value={i}>{i}</option>)
     }
-    return <select onChange={props.handleChange} disabled={props.isPlaying}>{options}</select>
+    return (
+        <div className='row page-view'>
+            <div className='col-2'>
+            <label htmlFor='pageSelect'>Page:</label>
+            </div>
+            <div className='col-2'>
+            <select id="pageSelect" className="form-control" onChange={props.handleChange} disabled={props.isPlaying}>{options}</select>
+            </div>
+        </div>
+    )
 }
 
 const Display=(props)=>{
     const {rhythms,rhythm,handleRhythm,isPlaying,pages,handleChange}=props
     return(
+        <div>
+        <h4>Your Rhythms/Groupings</h4>
         <table className='table'>
         <DisplayHeader/>
         <DisplayBody rhythms={rhythms} handleRhythm={handleRhythm} rhythmActive={rhythm} isPlaying={isPlaying}/>
         <DisplayPages pages={pages} handleChange={handleChange} isPlaying={isPlaying}/>
         </table>
+        </div>
     )
 }
 

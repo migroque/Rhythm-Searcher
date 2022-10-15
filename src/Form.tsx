@@ -14,7 +14,7 @@ class Form extends Component<{},myState>{
     initialState={
         minGroup:3,
         maxGroup:5,
-        numMeas:4,
+        numMeas:2,
         timeSig:'4/4',
         subDiv: 'Eighths',
     }
@@ -23,7 +23,7 @@ class Form extends Component<{},myState>{
         this.state={
             minGroup:3,
             maxGroup:5,
-            numMeas:4,
+            numMeas:2,
             timeSig:'4/4',
             subDiv: 'Eighths',
         }
@@ -64,44 +64,70 @@ class Form extends Component<{},myState>{
             options.push(<option value={i}>{i}</option>)
         }
         return(
+            <div className='search-settings'>
+            <h4>Search Settings</h4>
             <form  onSubmit={this.submitForm}>
             <div className="form-group">
-
-                <label htmlFor='Min'>Minimum Group Size</label>
-                <select className='form-control' name="minGroup" id="sbd" value={this.state.minGroup} onChange={this.handleSelChange}>
-                <option value={1}>1</option>
-                <option value={2}>2</option>
-                <option value={3}>3</option>
-                <option value={4}>4</option>
-                <option value={5}>5</option>
-                <option value={6}>6</option>
-                </select>
-                <label htmlFor='Max'>Maximum Group Size</label>
-                <select className='form-control' name="maxGroup" id="sbd" value={this.state.maxGroup} onChange={this.handleSelChange}>
-                {options}
-                </select>
-                <label htmlFor='numMeas'>Number of Measures</label>
-                <select className='form-control' name="numMeas" id="sbd" value={this.state.numMeas} onChange={this.handleSelChange}>
-                <option value={2}>2</option>
-                <option value={3}>3</option>
-                <option value={4}>4</option>
-                </select>
-                <label htmlFor="TimeSig">Time Signature</label>
-                <select className='form-control' name="timeSig" id="TimeSig" value={this.state.timeSig} onChange={this.handleSelChange}>
-                <option value="4/4">4/4</option>
-            </select>
+                <div className='row'>
+                    <div className='col'>
+                    <label htmlFor='Min'>Minimum Group Size</label>
+                    </div>
+                    <div className='col'>
+                    <label htmlFor='Max'>Maximum Group Size</label>
+                    </div>
+                    <div className='col'>
+                    <label htmlFor='numMeas'>Number of Measures</label>
+                    </div>
+                    <div className='col'>
+                    <label htmlFor="TimeSig">Time Signature</label>
+                    </div>
+                    <div className='col'>
+                    <label htmlFor="Subdiv">Subdivision</label>
+                    </div>
+                </div>
+                <div className='row'>
+                    <div className='col'>
+                    <select className='form-control' name="minGroup" id="sbd" value={this.state.minGroup} onChange={this.handleSelChange}>
+                        <option value={1}>1</option>
+                        <option value={2}>2</option>
+                        <option value={3}>3</option>
+                        <option value={4}>4</option>
+                        <option value={5}>5</option>
+                        <option value={6}>6</option>
+                    </select>
+                    </div>
+                    <div className='col'>
+                    <select className='form-control' name="maxGroup" id="sbd" value={this.state.maxGroup} onChange={this.handleSelChange}>
+                        {options}
+                    </select>
+                    </div>
+                    <div className='col'>
+                    <select className='form-control' name="numMeas" id="sbd" value={this.state.numMeas} onChange={this.handleSelChange}>
+                        <option value={2}>2</option>
+                        <option value={3}>3</option>
+                        <option value={4}>4</option>
+                    </select>
+                    </div>
+                    <div className='col'>
+                    <select className='form-control' name="timeSig" id="TimeSig" value={this.state.timeSig} onChange={this.handleSelChange}>
+                        <option value="4/4">4/4</option>
+                    </select>
+                    </div>
+                    <div className='col'>
+                    <select className='form-control' name="subDiv" id="sbd" value={this.state.subDiv} onChange={this.handleSelChange}>
+                        <option value="Eigths">8ths</option>
+                        <option value="8th Note Triplets">8th Note Triplets</option>
+                        <option value="16ths">16ths</option>
+                    </select>
+                    </div>
+                </div>
             
-            <label htmlFor="Subdiv">Subdivision</label>
-            <select className='form-control' name="subDiv" id="sbd" value={this.state.subDiv} onChange={this.handleSelChange}>
-                <option value="Eigths">8ths</option>
-                <option value="8th Note Triplets">8th Note Triplets</option>
-                <option value="16ths">16ths</option>
-            </select>
                 
-                <input className='btn btn-primary'type="submit" value="Submit" onClick={this.submitForm} disabled={this.props.playing}/>
+                <input className='btn btn-primary submit-button'type="submit" value="Submit" onClick={this.submitForm} disabled={this.props.playing}/>
             </div>
                 
             </form>
+            </div>
         )
     }
 }

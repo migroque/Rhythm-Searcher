@@ -246,15 +246,26 @@ const handleChange=(event)=>{
     const sig=submit.timeSig[0]+"Y"+submit.timeSig[2]
     const search=url+"/"+submit.minGroup+"/"+submit.maxGroup+"/"+submit.numMeas+"/"+sig+"/0/"+submit.subDiv+'/'
     
-    
-   
+    // See if http request was process properly
+    let done=true;
     fetch(search)
       .then(
-        (response)=> {
+        (response)=> { 
           if (!response.ok){
+            done=false;
             throw new Error("404 Error. Search Failed")
           }
           else{
+            // Set state of the app to appropriate values
+            setTimeSig(submit.timeSig)
+            setSubDiv(submit.subDiv)
+            setNumMeas(submit.numMeas)
+            setMinGroup(parseInt(submit.minGroup))
+            setMaxGroup(parseInt(submit.maxGroup))
+
+            setNumBeats((TimeSigtoNum.get(submit.timeSig)*SubdivtoNum.get(submit.subDiv)))
+            setMaxNotes(TimeSigtoNum.get(submit.timeSig)*SubdivtoNum.get(submit.subDiv))
+            setTimeInt(60000/(tempo*SubdivtoNum.get(submit.subDiv)))
             return response.text();
           }
         
@@ -265,44 +276,54 @@ const handleChange=(event)=>{
         //renderRhythm(text)
       })
       .catch(function(error){
+          done=false;
           alert(error)
           
       })
-    setTimeSig(submit.timeSig)
-    setSubDiv(submit.subDiv)
-    setNumMeas(submit.numMeas)
-    setMinGroup(parseInt(submit.minGroup))
-    setMaxGroup(parseInt(submit.maxGroup))
-    console.log(subDiv)
-
-    setNumBeats((TimeSigtoNum.get(submit.timeSig)*SubdivtoNum.get(submit.subDiv)))
-    setMaxNotes(TimeSigtoNum.get(submit.timeSig)*SubdivtoNum.get(submit.subDiv))
-    setTimeInt(60000/(tempo*SubdivtoNum.get(submit.subDiv)))
-    console.log(numBeats)
-
-    
   }
+
+  // Dynamic Class Names for when half time is activated/when sounds are playing 
   let playtext="Play";
+  let playClass="btn btn-outline-primary";
   if (playing){
-    playtext="Pause"
+    playtext="Pause";
+    playClass="btn btn-primary"
   }
   let halftext="Halftime?"
+  let halfClass="btn btn-outline-primary";
   if (halfTime){
     halftext="Halftime"
+    halfClass="btn btn-primary"
   }
+  
   
 
   return (
     <div className="container">
+        <div className='border rounded main-header'>
         <h1>Rhythm Searcher</h1>
+        <h5>Find all the note groupings you want here!</h5>
+        </div>
         <Form handleSubmit={handleSubmit} playing={playing}/>
-        <button onClick={togglePlaying} className='btn btn-primary'>{playtext}</button>
-        <div className='col-lg-6 mx-auto'>
-        <label>Tempo</label>
-        <button disabled={playing} onClick={incTempDown}>-</button>
-        <input disabled={playing} type="number" min="30" max="240" value={tempo} onChange={(event)=>handleTempo(event)}/>
-        <button disabled={playing} onClick={incTempUp}>+</button>
-        <button disabled={playing} onClick={toggleHalfTime}>{halftext}</button>
+        <div className='playback-settings'>
+        <h4>Playback Settings</h4>
+        <div className='row'>
+          <div className='col-1'>
+          <label>Tempo:</label>
+          </div>
+          <div className="col-2">
+          <button disabled={playing} className="btn btn-secondary btn-sm inc-buttons" onClick={incTempDown}>-</button>
+          <input disabled={playing} type="number" min="30" max="240" value={tempo} onChange={(event)=>handleTempo(event)}/>
+          <button disabled={playing} className="btn btn-secondary btn-sm inc-buttons" onClick={incTempUp}>+</button>
+          </div>
+          <div className='col-2'>
+          <button disabled={playing} onClick={toggleHalfTime} className={halfClass}>{halftext}</button>
+          </div>
+          <div className='col-1'>
+          <button onClick={togglePlaying} className={playClass}>{playtext}</button>
+          </div>
+        
+        </div>
         </div>
         <Display handleRhythm={handleRhythm} rhythms={rhythmTable} rhythm={rhythm} isPlaying={playing} pages={pages} handleChange={handleChange}/>
       </div>
