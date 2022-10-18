@@ -1,4 +1,3 @@
-import { kStringMaxLength } from 'buffer';
 import React, {Component} from 'react'
 
 // Use this form to handle submissions to search for rhythms
@@ -10,7 +9,12 @@ type myState={
     subDiv:string,
 }
 
-class Form extends Component<{},myState>{
+type properties={
+    handleSubmit: (submit:any)=>void;
+    playing:boolean
+}
+
+class Form extends Component<properties,myState>{
     initialState={
         minGroup:3,
         maxGroup:5,
@@ -18,7 +22,7 @@ class Form extends Component<{},myState>{
         timeSig:'4/4',
         subDiv: 'Eighths',
     }
-    constructor(props: {} | Readonly<{}>){
+    constructor(props: properties){
         super(props);
         this.state={
             minGroup:3,
@@ -32,19 +36,17 @@ class Form extends Component<{},myState>{
         const target=event.target
         const value=target.value
         const name=target.name
-        this.setState(
-            {
-                [name]:value,
-            }
-        )
+        const newState={[name]:value} as Pick<myState, keyof myState>
+        this.setState(newState)
     }
 
     
     handleSelChange= (event: { target: any; })=>{
         const target=event.target
-        const value=target.value
+        const value=parseInt(target.value)
         const name=target.name
-        this.setState({[name]:value})
+        const newState={[name]:value} as Pick<myState, keyof myState>
+        this.setState(newState)
     }
     submitForm=(event: any)=>{
         if (this.state.minGroup>this.state.maxGroup){
@@ -60,7 +62,8 @@ class Form extends Component<{},myState>{
     render(): React.ReactNode {
         const {minGroup,maxGroup,timeSig, subDiv}=this.state
         let options=[];
-        for (let i=parseInt(minGroup);i<=parseInt(minGroup)+3;i++){
+        let minParam=minGroup.toString()
+        for (let i=parseInt(minParam);i<=parseInt(minParam)+3;i++){
             options.push(<option value={i}>{i}</option>)
         }
         return(
@@ -121,11 +124,8 @@ class Form extends Component<{},myState>{
                     </select>
                     </div>
                 </div>
-            
-                
                 <input className='btn btn-primary submit-button'type="submit" value="Submit" onClick={this.submitForm} disabled={this.props.playing}/>
-            </div>
-                
+            </div>   
             </form>
             </div>
         )

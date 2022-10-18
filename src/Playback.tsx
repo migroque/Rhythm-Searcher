@@ -22,7 +22,7 @@ rhythm={
 
 
 
-const Playback=(props)=>{
+const Playback=(props: { tempo: any; rhythm: { subdiv: string; arr: string | any[]; timeSig: string[]; Subdiv: any; }; })=>{
     // Set the beat state as well as the tempo state
     const [beat,setBeat]=useState(0)
     const [tmp,setTempo]=useState(props.tempo)

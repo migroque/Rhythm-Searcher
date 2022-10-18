@@ -1,5 +1,4 @@
 import React, {Component,useEffect,useState} from 'react';
-import Table from './Table'
 import Form from './Form'
 import Display from './Display'
 import {TimeSigtoNum,SubdivtoNum} from "./Interfaces";
@@ -9,16 +8,6 @@ import kick from "./samples/kick.wav"
 import click from "./samples/click.wav"
 
 import './BootStrap/bootstrap.css'
-import Tempo from './PlaybackSettings';
-
-
-
-const rhythm={
-  timeSig: "4/4",
-  subdiv: "eighths",
-  arr: [3,3,3,3,3,3,3,3,3,3,2]
-}
-//[3,3,3,3,3,1],[5,5,5,1]
 
 const App=()=>{
   // Setting states for submissions and playback variables
@@ -51,7 +40,7 @@ const App=()=>{
   const Click=new Audio(click);
   const Snare=new Audio(snare);
   const Kick=new Audio(kick);
-  const sounds=new Array(Click,Snare,Kick);
+  const sounds=[Click,Snare,Kick];
 
   // Getting the time interval for each beat
   const [timeInt,setTimeInt]=useState(60000/(tempo*SubdivtoNum.get(subDiv)))
@@ -62,7 +51,7 @@ const App=()=>{
 
   // Set tempo/time interval
   
-  const handleTempo=(event)=>{
+  const handleTempo=(event: React.ChangeEvent<HTMLInputElement>)=>{
     const eventVal=event.target.value
     setTempo(parseInt(eventVal))
     setTimeInt(60000/(tempo*SubdivtoNum.get(subDiv)))
@@ -79,7 +68,7 @@ const App=()=>{
   }
 
   // Set rhythm/prefixSum
-  const handleRhythm=(rhythm)=>{
+  const handleRhythm=(rhythm: React.SetStateAction<number[]>)=>{
     setRhythm(rhythm)
   }
 
@@ -185,10 +174,10 @@ useEffect(()=>{
 
   // Function to change the state to the array of rhythms we got, which then displays them below our search form.
   
-  const draw=(rhythms)=>{
+  const draw=(rhythms: string)=>{
     console.log(rhythms)
-    let newTable=[]
-    let numArr=[]
+    let newTable: any[] | ((prevState: number[][]) => number[][])=[]
+    let numArr: any[]=[]
     let arr=rhythms.split("\n")
     
     let length=arr.pop()
@@ -202,7 +191,7 @@ useEffect(()=>{
       numArr=[]
     }
     setTable(newTable)
-    setPages(parseInt(length))
+    setPages(parseInt(length!))
     
     setRhythm(newTable[0])
   }
@@ -211,7 +200,7 @@ useEffect(()=>{
   // Turn the rhythm string into an int array, then 
   
 // Function to get different index of rhythms
-const handleChange=(event)=>{
+const handleChange=(event: { target: { value: number; }; value: React.SetStateAction<number>; })=>{
   console.log(event.target.value)
   let url="http://127.0.0.1:8000/rhythms";
   const sig=timeSig[0]+"Y"+timeSig[2]
@@ -247,12 +236,11 @@ const handleChange=(event)=>{
     const search=url+"/"+submit.minGroup+"/"+submit.maxGroup+"/"+submit.numMeas+"/"+sig+"/0/"+submit.subDiv+'/'
     
     // See if http request was process properly
-    let done=true;
+
     fetch(search)
       .then(
         (response)=> { 
           if (!response.ok){
-            done=false;
             throw new Error("404 Error. Search Failed")
           }
           else{
@@ -276,7 +264,6 @@ const handleChange=(event)=>{
         //renderRhythm(text)
       })
       .catch(function(error){
-          done=false;
           alert(error)
           
       })
@@ -330,18 +317,6 @@ const handleChange=(event)=>{
     ) 
 }
 
-//Graveyard
-//<Table submitData={submissions} removeCharacter={removeCharacter} />
-//<Tempo value={tempo} onChange={(event)=>handleTempo(event)}/>
-/*
-  const removeCharacter= (index: number)=> {
-    const submits = submissions
-
-    setSubmissions(submits.filter((character,i)=>{
-      return i!==index
-    } ))
-  }
-*/
 
         
 export default App;

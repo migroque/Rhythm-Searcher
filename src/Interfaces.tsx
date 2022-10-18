@@ -1,4 +1,4 @@
-import React,{Component} from "react";
+
 
 export const TimeSigtoNum=new Map();
 TimeSigtoNum.set("4/4",4);

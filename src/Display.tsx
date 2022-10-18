@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import App from './App';
 
-function arraysEqual(a,b) {
+function arraysEqual(a: string | any[] | null,b: string | any[] | null) {
     /* WARNING: arrays must not contain {objects} or behavior may be undefined */
     if (a === b) return true;
   if (a == null || b == null) return false;
@@ -29,7 +28,7 @@ const DisplayHeader=()=>{
     )
 }
 // Want to pass handlerhythm, the rhythm table, the active rhythm, and whether or not we're playing rn.
-const DisplayBody=(props)=>{
+const DisplayBody=(props: { rhythms: any[]; rhythmActive: string | any[] | null; isPlaying: boolean | undefined; handleRhythm: (arg0: any) => void; })=>{
 
     const rows=props.rhythms.map((rhythm,index)=>{
         let str="["
@@ -58,7 +57,7 @@ const DisplayBody=(props)=>{
     return <tbody>{rows}</tbody> 
 }
 
-const DisplayPages=(props)=>{
+const DisplayPages=(props: { pages: number; handleChange: React.ChangeEventHandler<HTMLSelectElement> | undefined; isPlaying: boolean | undefined; })=>{
     let options=[];
     for (let i=1;i<=props.pages;i++){
         options.push(<option value={i}>{i}</option>)
@@ -75,7 +74,7 @@ const DisplayPages=(props)=>{
     )
 }
 
-const Display=(props)=>{
+const Display=(props: { rhythms: any; rhythm: any; handleRhythm: any; isPlaying: any; pages: any; handleChange: any; })=>{
     const {rhythms,rhythm,handleRhythm,isPlaying,pages,handleChange}=props
     return(
         <div>
