@@ -50,21 +50,24 @@ const App=()=>{
   //Functions to set different state variables
 
   // Set tempo/time interval
-  
+  /*
   const handleTempo=(event: React.ChangeEvent<HTMLInputElement>)=>{
     const eventVal=event.target.value
     setTempo(parseInt(eventVal))
     setTimeInt(60000/(tempo*SubdivtoNum.get(subDiv)))
-  }
+  }*/
   const incTempUp=()=>{
-    setTempo((tempo)=>++tempo)
-    console.log(tempo)
-    setTimeInt(60000/((tempo+1)*SubdivtoNum.get(subDiv)))
-    console.log(timeInt)
+    if (tempo<240){
+      setTempo((tempo)=>++tempo)
+      setTimeInt(60000/((tempo+1)*SubdivtoNum.get(subDiv)))
+    }
+    
   }
   const incTempDown=()=>{
-    setTempo((tempo)=>--tempo)
-    setTimeInt(60000/((tempo-1)*SubdivtoNum.get(subDiv)))
+    if (tempo>30){
+      setTempo((tempo)=>--tempo)
+      setTimeInt(60000/((tempo-1)*SubdivtoNum.get(subDiv)))
+    }
   }
 
   // Set rhythm/prefixSum
@@ -282,7 +285,7 @@ const handleChange=(event: { target: { value: number; }; value: React.SetStateAc
     halftext="Halftime"
     halfClass="btn btn-primary"
   }
-  
+  let bpmtext=tempo.toString()+" BPM"
   
 
   return (
@@ -294,29 +297,29 @@ const handleChange=(event: { target: { value: number; }; value: React.SetStateAc
         <Form handleSubmit={handleSubmit} playing={playing}/>
         <div className='playback-settings'>
         <h4>Playback Settings</h4>
-        <div className='row'>
-          <div className='col-1'>
+        <div className='controls'>
+          <div className='temp-label'>
           <label>Tempo:</label>
           </div>
-          <div className="col-2">
-          <button disabled={playing} className="btn btn-secondary btn-sm inc-buttons" onClick={incTempDown}>-</button>
-          <input disabled={playing} type="number" min="30" max="240" value={tempo} onChange={(event)=>handleTempo(event)}/>
-          <button disabled={playing} className="btn btn-secondary btn-sm inc-buttons" onClick={incTempUp}>+</button>
+          <div className="temp-control">
+          <button disabled={playing} className="btn btn-outline-secondary btn-sm inc-buttons" onClick={incTempDown}>-</button>
+          <label>{bpmtext}</label>
+          <button disabled={playing} className="btn btn-outline-secondary btn-sm inc-buttons" onClick={incTempUp}>+</button>
           </div>
-          <div className='col-2'>
+          <div className='toggle'>
           <button disabled={playing} onClick={toggleHalfTime} className={halfClass}>{halftext}</button>
           </div>
-          <div className='col-1'>
+          <div className='toggle'>
           <button onClick={togglePlaying} className={playClass}>{playtext}</button>
           </div>
+          </div>
         
-        </div>
         </div>
         <Display handleRhythm={handleRhythm} rhythms={rhythmTable} rhythm={rhythm} isPlaying={playing} pages={pages} handleChange={handleChange}/>
       </div>
     ) 
 }
 
-
+//<input disabled={playing} type="number" min="30" max="240" value={tempo} onChange={(event)=>handleTempo(event)}/>
         
 export default App;

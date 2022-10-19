@@ -58,11 +58,35 @@
 }
 
 .inc-buttons{
-  margin-left: 5px;
-  margin-right: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
   margin-bottom: 2px;
 }
 
 .page-view{
   margin-top:20px;
+}
+
+.temp-display{
+  vertical-align:middle;
+}
+
+.temp-label{
+  margin:10px;
+}
+
+.temp-control{
+  margin:10px;
+}
+
+.controls{
+  display: flex;
+  flex-direction: row;
+}
+
+.toggle{
+  margin-top: 7px;
+  margin-bottom: 7px;
+  margin-left: 25px;
+  margin-right: 25px;
 }
